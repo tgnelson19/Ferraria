@@ -46,6 +46,12 @@ public:
            dy = 0;
        }
 
+       if (x > 1600) {
+           x = 0;
+       }else if (x < 0) {
+           x = 1600;
+       }
+
        if (name == "block" && dy <= 0) { 
             dy = 0;
             y = floor;

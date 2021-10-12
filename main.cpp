@@ -12,12 +12,21 @@ int main()
 
     std::vector<Entity *> entities; entities.clear();
 
-    sf::RectangleShape characterThingy; characterThingy.setFillColor(sf::Color::Green); characterThingy.setSize(sf::Vector2f(50,50));
-
+    sf::RectangleShape characterThingy; characterThingy.setFillColor(sf::Color::Green); characterThingy.setSize(sf::Vector2f(40,40));
     sf::RectangleShape blockThingy; blockThingy.setFillColor(sf::Color::Blue); blockThingy.setSize(sf::Vector2f(10,10));
+    sf::RectangleShape red; red.setFillColor(sf::Color::Red); red.setSize(sf::Vector2f(1600,25));
+    sf::RectangleShape platform; platform.setFillColor(sf::Color::White); platform.setSize(sf::Vector2f(160,25));
+
+    Entity *r = new Entity();
+    r->settings(red, 0, 775, 0); r->name = "red";
+    entities.push_back(r);
+
+    Entity *p = new Entity();
+    p->settings(platform, 740, 425, 0); p->name = "platform";
+    entities.push_back(p);
 
     Character *c = new Character();
-    c->settings(characterThingy, 800, 400, 0);
+    c->settings(characterThingy, 800, 325, 0);
     entities.push_back(c);
 
     sf::Mouse mouse; std::vector<float> mousePos = {0, 0}; ///Mouse position
@@ -63,6 +72,9 @@ int main()
                     sf::FloatRect aBox = p->sprite.getGlobalBounds();
                     sf::FloatRect bBox = q->sprite.getGlobalBounds();
                     if(aBox.intersects(bBox)){
+                        if(p->name == "red" && q->name == "character" ){
+                            c->settings(characterThingy, 800, 325, 0);
+                        }
                         p->interacted = true; q->interacted = true;
                         if (aBox.top < bBox.top){
                             p->floor = bBox.top - p->sprite.getSize().y;
