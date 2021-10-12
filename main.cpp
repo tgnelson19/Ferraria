@@ -1,4 +1,6 @@
 #include <SFML/Graphics.hpp>
+#include <ctime>
+#include <cstdlib>
 
 #include "classes/Entity.h"
 #include "classes/Character.h"
@@ -7,8 +9,18 @@ const int maxBlocks = 100;
 
 int main()
 {
+
+    srand(time(0));
     sf::RenderWindow window(sf::VideoMode(1600, 800), "Ferraria");
     window.setFramerateLimit(60);
+
+    sf::Font font;
+    if (!font.loadFromFile("fonts/Oswald-Bold.ttf")) { /// Free for commercial use from fontsquirrel.com
+        return EXIT_FAILURE;
+    }
+
+    sf::Text score("Score: 0", font, 30); score.setFillColor(sf::Color::White); score.setPosition(1450, 10);
+
 
     std::vector<Entity *> entities; entities.clear();
 
@@ -16,6 +28,7 @@ int main()
     sf::RectangleShape blockThingy; blockThingy.setFillColor(sf::Color::Blue); blockThingy.setSize(sf::Vector2f(10,10));
     sf::RectangleShape red; red.setFillColor(sf::Color::Red); red.setSize(sf::Vector2f(1600,25));
     sf::RectangleShape platform; platform.setFillColor(sf::Color::White); platform.setSize(sf::Vector2f(160,25));
+    sf::RectangleShape gold; gold.setFillColor(sf::Color::Yellow); gold.setSize(sf::Vector2f(25,25));
 
     Entity *r = new Entity();
     r->settings(red, 0, 775, 0); r->name = "red";
@@ -25,6 +38,10 @@ int main()
     p->settings(platform, 740, 425, 0); p->name = "platform";
     entities.push_back(p);
 
+    Entity *g = new Entity();
+    g->settings(gold, 600, 500, 0); g->isAlive = true; g->name = "gold";
+    entities.push_back(g);
+
     Character *c = new Character();
     c->settings(characterThingy, 800, 325, 0);
     entities.push_back(c);
@@ -32,6 +49,8 @@ int main()
     sf::Mouse mouse; std::vector<float> mousePos = {0, 0}; ///Mouse position
 
     int blockCount = 0;
+    int scoreInt = 0;
+    bool glive = false;
 
     enum states {START, GAME}; states state = START;
 
@@ -42,9 +61,9 @@ int main()
 
 
         c->dx = 0;
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) { c->dx = 10; }
-        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) { c->dx = -10;}
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && c->canJump) { c->dy = -30;}
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) { c->dx = 5; }
+        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) { c->dx = -5;}
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && c->canJump) { c->dy = -15;}
 
         
         if(sf::Mouse::isButtonPressed(mouse.Left)){
@@ -56,7 +75,11 @@ int main()
             entities.push_back(b);
         }
         
-        
+        if (!glive){
+            int randX = rand() % 1600; int randY = rand() % 800 - 25;
+            g->settings(gold, randX, randY, 0);
+            glive = true;
+        }
         
         for(auto i:entities){
             i->interacted = false;
@@ -74,7 +97,15 @@ int main()
                     if(aBox.intersects(bBox)){
                         if(p->name == "red" && q->name == "character" ){
                             c->settings(characterThingy, 800, 325, 0);
+                            scoreInt = 0;
+                            score.setString("Score: " + std::to_string(scoreInt));
                         }
+                        if(p->name == "gold" && q->name == "character" ){
+                            glive = false;
+                            scoreInt++;
+                            score.setString("Score: " + std::to_string(scoreInt));
+                        }
+
                         p->interacted = true; q->interacted = true;
                         if (aBox.top < bBox.top){
                             p->floor = bBox.top - p->sprite.getSize().y;
@@ -103,6 +134,7 @@ int main()
 
         window.clear();
         for (auto i:entities) { i->draw(window); } ///Draw Logic
+        window.draw(score);
         window.display();
     }
 

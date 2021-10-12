@@ -26,11 +26,11 @@ public:
     void update() {
 
         if(!interacted){
-            floor = 800 - sprite.getSize().y;
+            floor = 775 - sprite.getSize().y;
         }
 
-        if(floor > 800 - sprite.getSize().y){
-            floor = 800 - sprite.getSize().y;
+        if(floor > 775 - sprite.getSize().y){
+            floor = 775 - sprite.getSize().y;
         }
 
         if(y < floor){
@@ -40,7 +40,7 @@ public:
         }
 
         if (y <= floor){
-           dy += 1;
+           dy += 0.75;
        } else {
            y = floor;
            dy = 0;
@@ -52,7 +52,7 @@ public:
            x = 1600;
        }
 
-       if (name == "block" && dy <= 0) { 
+       if (name == "block" && dy <= -1) { 
             dy = 0;
             y = floor;
         }
