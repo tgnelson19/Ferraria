@@ -24,8 +24,6 @@ int main()
 
     int blockCount = 0;
 
-
-
     enum states {START, GAME}; states state = START;
 
     while (window.isOpen())
@@ -39,6 +37,7 @@ int main()
         else if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) { c->dx = -10;}
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && c->canJump) { c->dy = -30;}
 
+        
         if(sf::Mouse::isButtonPressed(mouse.Left)){
             Character *b = new Character();
             sf::Vector2i mvec = sf::Mouse::getPosition(window);
@@ -47,6 +46,8 @@ int main()
             blockCount += 1;
             entities.push_back(b);
         }
+        
+        
         
         for(auto i:entities){
             i->interacted = false;
@@ -63,13 +64,12 @@ int main()
                     sf::FloatRect bBox = q->sprite.getGlobalBounds();
                     if(aBox.intersects(bBox)){
                         p->interacted = true; q->interacted = true;
-                        if (aBox.top > bBox.top){
-                            p->floor = aBox.top + p->sprite.getSize().y;
-                        } else {
-                            q->floor = bBox.top + q->sprite.getSize().y;
+                        if (aBox.top < bBox.top){
+                            p->floor = bBox.top - p->sprite.getSize().y;
+                        } else if (bBox.top < aBox.top){
+                            q->floor = aBox.top - q->sprite.getSize().y;
                         }
                     }
-                    
                 }
             }
         }

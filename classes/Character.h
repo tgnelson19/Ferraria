@@ -18,6 +18,8 @@ public:
         canJump = false;
         floor = 800 - sprite.getSize().y;
         interacted = false;
+        dy = 0;
+        dx = 0;
 
     }
 
@@ -31,22 +33,30 @@ public:
             floor = 800 - sprite.getSize().y;
         }
 
-
-        if(y != floor){
+        if(y < floor){
             canJump = false;
         } else {
             canJump = true;
         }
 
-        x += dx;
-        y += dy;
-
-       if (y < floor){
+        if (y <= floor){
            dy += 1;
        } else {
            y = floor;
            dy = 0;
        }
+
+       if (name == "block" && dy <= 0) { 
+            dy = 0;
+            y = floor;
+        }
+
+        x += dx;
+        y += dy;
+
+       
+
+       
 
     }
 
