@@ -69,7 +69,24 @@ int main()
         if(sf::Mouse::isButtonPressed(mouse.Left)){
             Character *b = new Character();
             sf::Vector2i mvec = sf::Mouse::getPosition(window);
+            
+
+            /* Code to make the water gun effect
+            mousePos.at(0) = mvec.x - c->x; ///Mouse position relative to the character
+            mousePos.at(1) = mvec.y - c->y;
+            if(mousePos.at(0) <= 0) {
+                b->dy = -15*sin(atan(mousePos.at(1) / mousePos.at(0)));
+                b->dx = -15*cos(atan(mousePos.at(1) / mousePos.at(0)));
+            } else {
+                b->dy = 15*sin(atan(mousePos.at(1) / mousePos.at(0)));
+                b->dx = 15*cos(atan(mousePos.at(1) / mousePos.at(0)));
+            }
+
+            b->settings(blockThingy, c->x + 20, c->y - 50, 0);
+            */
+
             b->settings(blockThingy, mvec.x, mvec.y, 0);
+
             b->name = "block";
             blockCount += 1;
             entities.push_back(b);

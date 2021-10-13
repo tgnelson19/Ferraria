@@ -52,11 +52,6 @@ public:
            x = 1600;
        }
 
-       if (name == "block" && dy <= -1) { 
-            dy = 0;
-            y = floor;
-        }
-
         x += dx;
         y += dy;
 
